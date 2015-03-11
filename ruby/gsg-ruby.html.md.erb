@@ -20,7 +20,7 @@ This section describes how to deploy a Ruby application to
 <%=vars.product_short%>, and uses output from a sample app to show specific
 steps of the deployment process.
 
-### Prerequisites ###
+#### Prerequisites ####
 
 * A Ruby 2.x application that runs locally on your workstation
 * [Bundler](http://bundler.io) configured on your workstation
@@ -28,191 +28,200 @@ steps of the deployment process.
 * The [cf Command Line Interface (CLI)](../../devguide/installcf/install-go-cli.html) installed on your
 workstation
 
-### Step 1: Create and Bind a Service Instance for a Ruby Application ###
+<ol class="list-steps">
+	<li>
+		<h3>Create and Bind a Service Instance for a Ruby Application</h3>
 
-This section describes using the CLI to configure a Redis Cloud managed service
-instance for an app. <%=vars.dev_console_1%>
+		This section describes using the CLI to configure a Redis Cloud managed service
+		instance for an app. <%=vars.dev_console_1%>
 
-<%=vars.product_short%> supports two types of service instances:
+		<%=vars.product_short%> supports two types of service instances:
 
-* Managed services integrate with <%=vars.product_short%> through service
-brokers that offer services and plans and manage the service calls between
-<%=vars.product_short%> and a service provider.
-* User-provided service instances enable you to connect your application to
-pre-provisioned external service instances.
+		<ul>
+			<li>Managed services integrate with <%=vars.product_short%> through service
+		brokers that offer services and plans and manage the service calls between
+		<%=vars.product_short%> and a service provider.</li>
+			<li>User-provided service instances enable you to connect your application to
+		pre-provisioned external service instances.</li>
+		</ul>
 
-For more information on creating and using service instances, refer to the
-[Services Overview](../../devguide/services/index.html) topic.
+		For more information on creating and using service instances, refer to the
+		[Services Overview](../../devguide/services/index.html) topic.
 
-#### Create a Service Instance ####
+		<h4> Create a Service Instance </h4>
 
-Run `cf marketplace` to view managed and user-provided services and plans
-that are available to you.
+		Run <code>cf marketplace</code> to view managed and user-provided services and plans
+		that are available to you.
 
-The example shows three of the available managed database-as-a-service providers
-and the plans that they offer: `cleardb` MySQL, `elephantsql` PostgreSQL as a
-Service, and `mongolab` MongoDB-as-a-Service.
+		The example shows three of the available managed database-as-a-service providers
+		and the plans that they offer: <code>cleardb</code> MySQL, <code>elephantsql</code> PostgreSQL as a
+		Service, and <code>mongolab</code> MongoDB-as-a-Service.
 
-<pre class="terminal">
-	$  cf marketplace
-	Getting services from marketplace in org Cloud-Apps / space development as clouduser@example.com...
-	OK
+		<pre class="terminal">
+$  cf marketplace
+Getting services from marketplace in org Cloud-Apps / space development as clouduser@example.com...
+OK
 
-	service          plans 	description
-	...
-	cleardb          spark, boost, amp, shock  	Highly available MySQL for your Apps
-	...
-	elephantsql      turtle, panda, hippo, elephant   PostgreSQL as a Service
-	...
-	mongolab         sandbox   	Fully-managed MongoDB-as-a-Service
-	...
-</pre>
+service          plans 	description
+...
+cleardb          spark, boost, amp, shock  	Highly available MySQL for your Apps
+...
+elephantsql      turtle, panda, hippo, elephant   PostgreSQL as a Service
+...
+mongolab         sandbox   	Fully-managed MongoDB-as-a-Service
+...
+		</pre>
 
-Run `cf create-service SERVICE PLAN SERVICE_INSTANCE` to create a service
-instance for your app.
-Choose a SERVICE and PLAN from the list, and provide a unique name for the
-SERVICE_INSTANCE.
+		Run <code>cf create-service SERVICE PLAN SERVICE_INSTANCE</code> to create a service
+		instance for your app.
+		Choose a SERVICE and PLAN from the list, and provide a unique name for the
+		SERVICE_INSTANCE.
 
-<p class="tip"><strong>Sample App Step</strong><br />Run <code>cf create-service rediscloud 25mb redis</code>. This creates a service instance named <code>redis</code> that uses the <code>rediscloud</code> service and the <code>25mb</code> plan, as the example below shows.</p>
+		<p class="tip"><strong>Sample App Step</strong><br />Run <code>cf create-service rediscloud 25mb redis</code>. This creates a service instance named <code>redis</code> that uses the <code>rediscloud</code> service and the <code>25mb</code> plan, as the example below shows.</p>
 
-<pre class="terminal">
+		<pre class="terminal">
 $ cf create-service rediscloud 25mb redis
 Creating service redis in org Cloud-Apps / space development as clouduser@example.com....
 OK
-</pre>
-</p>
+		</pre>
 
-#### Bind a Service Instance ####
+		<h4>Bind a Service Instance</h4>
 
-When you bind an app to a service instance, <%=vars.product_short%> writes
-information about the service instance to the VCAP_SERVICES app environment
-variable.
-The app can use this information to integrate with the service instance.
+		When you bind an app to a service instance, <%=vars.product_short%> writes
+		information about the service instance to the VCAP_SERVICES app environment
+		variable.
+		The app can use this information to integrate with the service instance.
 
-Most services support bindable service instances.
-Refer to your service provider's documentation to confirm if they support this
-functionality.
+		Most services support bindable service instances.
+		Refer to your service provider's documentation to confirm if they support this
+		functionality.
 
-You can bind a service to an application with the command `cf bind-service APPLICATION SERVICE_INSTANCE`.
+		You can bind a service to an application with the command <code>cf bind-service APPLICATION SERVICE_INSTANCE</code>.
 
-Alternately, you can configure the deployment manifest file by adding a
-`services` block to the `applications` block and specifying the service
-instance.
-For more information and an example on service binding using a manifest, see the
-Sample App Step.
+		Alternately, you can configure the deployment manifest file by adding a
+		<code>services</code> block to the <code>applications</code> block and specifying the service
+		instance.
+		For more information and an example on service binding using a manifest, see the
+		Sample App Step.
 
-<%=vars.dev_console_5%>
+		<%=vars.dev_console_5%>
 
-<p class="tip"><strong>Sample App Step</strong><br />You can skip this step. The manifest for the sample app contains a <code>services</code> sub-block in the <code>applications</code> block, as the example below shows. This binds the <code>redis</code> service instance that you created in the previous step.</p>
+		<p class="tip"><strong>Sample App Step</strong><br />You can skip this step. The manifest for the sample app contains a <code>services</code> sub-block in the <code>applications</code> block, as the example below shows. This binds the <code>redis</code> service instance that you created in the previous step.</p>
 
-<%= yield_for_code_snippet from: 'cloudfoundry-samples/pong_matcher_ruby', at: 'ruby-2b' %>
+		<%= yield_for_code_snippet from: 'cloudfoundry-samples/pong_matcher_ruby', at: 'ruby-2b' %>
+	</li>
+	<li>
+		<h3><a id="deployment-options"></a>Configure Deployment Options</h3>
 
-### <a id="deployment-options"></a> Step 2: Configure Deployment Options  ###
+		<h4>Configure the Deployment Manifest</h4>
 
-#### Configure the Deployment Manifest ####
+		You can specify app deployment options in a manifest that the `cf push` command uses. For more information about application manifests and supported attributes, refer to the <a href="./../../devguide/deploy-apps/manifest.html">Deploying with Application Manifests</a> topic.
 
-You can specify app deployment options in a manifest that the `cf push` command uses. For more information about application manifests and supported attributes, refer to the [Deploying with Application Manifests](./../../devguide/deploy-apps/manifest.html) topic.
+		<h4>Configure a Production Server</h4>
 
-#### Configure a Production Server ####
+		<%=vars.product_short%> uses the default standard Ruby web server library, WEBrick, for Ruby and RoR apps. However, <%=vars.product_short%> can support a more robust production web server, such as Phusion Passenger, Puma, Thin, or Unicorn. If your app requires a more robust web server, refer to the <a href="./ruby-prod-server.html">Configure a Production Server</a> topic for help configuring a server other than WEBrick.
 
-<%=vars.product_short%> uses the default standard Ruby web server library, WEBrick, for Ruby and RoR apps. However, <%=vars.product_short%> can support a more robust production web server, such as Phusion Passenger, Puma, Thin, or Unicorn. If your app requires a more robust web server, refer to the [Configure a Production Server](./ruby-prod-server.html) topic for help configuring a server other than WEBrick.
+		<p class="tip"><strong>Sample App Step</strong><br />You can skip this step. The <code>manifest.yml</code> file for <code>pong_matcher_ruby</code> does not require any additional configuration to deploy the app.</p>
+	</li>
+	<li>
+		<h3>Log in and Target the API Endpoint</h3>
 
-<p class="tip"><strong>Sample App Step</strong><br />You can skip this step. The <code>manifest.yml</code> file for <code>pong_matcher_ruby</code> does not require any additional configuration to deploy the app.</p>
+		Run <code>cf login -a API_ENDPOINT</code>, enter your login credentials, and select a space
+		and org.
+		The API endpoint is <%=vars.api_endpoint%>.
 
-### Step 3: Log in and Target the API Endpoint ###
-
-Run `cf login -a API_ENDPOINT`, enter your login credentials, and select a space
-and org.
-The API endpoint is <%=vars.api_endpoint%>.
-
-  <%=vars.gen_GSG%>
+		  <%=vars.gen_GSG%>
 
 
-  <p class="tip"><strong>Sample App Step</strong><br />You must do this step to run the sample app.</p>
+		  <p class="tip"><strong>Sample App Step</strong><br />You must do this step to run the sample app.</p>
+	</li>
+	<li>
+		<h3>Deploy an App</h3>
 
-### Step 4: Deploy an App ###
+		<p class="note"><strong>Note</strong>: You must use the cf CLI to deploy apps.</p>
 
-<p class="note"><strong>Note</strong>: You must use the cf CLI to deploy apps.</p>
+		From the root directory of your application, run <code>cf push APP_NAME</code> to deploy
+		your application.
 
-From the root directory of your application, run `cf push APP_NAME` to deploy
-your application.
+		<code>cf push APP_NAME</code> creates a URL route to your application in the form
+		HOST.DOMAIN, where HOST is your APP_NAME and DOMAIN is specified by your
+		administrator.
+		Your DOMAIN is<code><%=vars.app_domain%></code>. For example: <code>cf push my-app</code> creates the
+		URL <code>my-app.<%=vars.app_domain%></code>.
 
-`cf push APP_NAME` creates a URL route to your application in the form
-HOST.DOMAIN, where HOST is your APP_NAME and DOMAIN is specified by your
-administrator.
-Your DOMAIN is`<%=vars.app_domain%>`. For example: `cf push my-app` creates the
-URL `my-app.<%=vars.app_domain%>`.
+		The URL for your app must be unique from other apps that <%=vars.product_short%>
+		hosts or the push will fail.
+		Use the following options to help create a unique URL:
 
-The URL for your app must be unique from other apps that <%=vars.product_short%>
-hosts or the push will fail.
-Use the following options to help create a unique URL:
+		<ul>
+			<li><code>-n</code> to assign a different HOST name for the app.</li>
+			<li><code>--random-route</code> to create a URL that includes the app name and random words.</li>
+			<li><code>cf help push</code> to view other options for this command.</li>
+		</ul>
 
-* `-n` to assign a different HOST name for the app.
-* `--random-route` to create a URL that includes the app name and random words.
-* `cf help push` to view other options for this command.
+		If you want to view log activity while the app deploys, launch a new terminal
+		window and run <code>cf logs APP_NAME</code>.
 
-If you want to view log activity while the app deploys, launch a new terminal
-window and run `cf logs APP_NAME`.
+		Once your app deploys, browse to your app URL.
+		Search for the <code>urls</code> field in the <code>App started</code> block in the output of the <code>cf push</code> command.
+		Use the URL to access your app online.
 
-Once your app deploys, browse to your app URL.
-Search for the `urls` field in the `App started` block in the output of the `cf push` command.
-Use the URL to access your app online.
+		<p class="tip"><strong>Sample App Step</strong><br />Run <code>cf push pong_matcher_ruby -n HOST_NAME</code>.<br /><br />Example: <code>cf push pong_matcher_ruby -n pongmatch-ex12</code> <br /><br />The example below shows the terminal output of deploying the <code>pong_matcher_ruby</code> app. <code>cf push</code> uses the instructions in the manifest file to create the app, create and bind the route, and upload the app. It then binds the app to the <code>redis</code> service and follows the instructions in the manifest to start one instance of the app with 256M. After the app starts, the output displays the health and status of the app.</p>
 
-<p class="tip"><strong>Sample App Step</strong><br />Run <code>cf push pong_matcher_ruby -n HOST_NAME</code>.<br /><br />Example: <code>cf push pong_matcher_ruby -n pongmatch-ex12</code> <br /><br />The example below shows the terminal output of deploying the <code>pong_matcher_ruby</code> app. <code>cf push</code> uses the instructions in the manifest file to create the app, create and bind the route, and upload the app. It then binds the app to the <code>redis</code> service and follows the instructions in the manifest to start one instance of the app with 256M. After the app starts, the output displays the health and status of the app.</p>
+		<p class="note"><strong>Note</strong>: The <code>pong_matcher_ruby</code> app does not include a web interface. To interact with the  <code>pong_matcher_ruby</code> app, see the interaction instructions on GitHub: <a href="https://github.com/cloudfoundry-samples/pong_matcher_ruby">https://github.com/cloudfoundry-samples/pong_matcher_ruby</a>.</p>
 
-<p class="note"><strong>Note</strong>: The <code>pong_matcher_ruby</code> app does not include a web interface. To interact with the  <code>pong_matcher_ruby</code> app, see the interaction instructions on GitHub: <a href="https://github.com/cloudfoundry-samples/pong_matcher_ruby">https://github.com/cloudfoundry-samples/pong_matcher_ruby</a>.</p>
+		<pre class="terminal">
+$ cf push pong_matcher_ruby -n pongmatch-ex12
+Using manifest file /Users/clouduser/workspace/pong_matcher_ruby/manifest.yml
 
-<pre class="terminal">
+Creating app pong_matcher_ruby in org Cloud-Apps / space development as clouduser@example.com...
+OK
 
-	$ cf push pong_matcher_ruby -n pongmatch-ex12
-	Using manifest file /Users/clouduser/workspace/pong_matcher_ruby/manifest.yml
+Creating route pongmatch-ex12.<%=vars.app_domain%>
+         Binding pongmatch-ex12.<%=vars.app_domain%> to pong_matcher_ruby...
+  OK
 
-	Creating app pong_matcher_ruby in org Cloud-Apps / space development as clouduser@example.com...
-	OK
+Uploading pong_matcher_ruby...
+Uploading app files from: /Users/clouduserl/workspace/pong_matcher_ruby
+Uploading 8.8K, 12 files
+OK
+  Binding service redis to app pong_matcher_ruby in org Cloud-Apps / space development as clouduser@example.com...
+  OK
 
-	Creating route pongmatch-ex12.<%=vars.app_domain%>
-           Binding pongmatch-ex12.<%=vars.app_domain%> to pong_matcher_ruby...
-    OK
+  Starting app pong_matcher_ruby in org cf-Cloud-Apps / space development as clouduser@example.com...
+  OK
+  ...
 
-	Uploading pong_matcher_ruby...
-	Uploading app files from: /Users/clouduserl/workspace/pong_matcher_ruby
-	Uploading 8.8K, 12 files
-	OK
-    Binding service redis to app pong_matcher_ruby in org Cloud-Apps / space development as clouduser@example.com...
-    OK
+  0 of 1 instances running, 1 starting
+  1 of 1 instances running
 
-    Starting app pong_matcher_ruby in org cf-Cloud-Apps / space development as clouduser@example.com...
-    OK
-    ...
+  App started
 
-    0 of 1 instances running, 1 starting
-    1 of 1 instances running
+  Showing health and status for app pong_matcher_ruby in org Cloud-Apps / space development as clouduser@example.com...
+  OK
 
-    App started
+  requested state: started
+  instances: 1/1
+  usage: 256M x 1 instances
+  urls: pongmatch-ex12.cfapps.io
 
-    Showing health and status for app pong_matcher_ruby in org Cloud-Apps / space development as clouduser@example.com...
-    OK
+       state     since                    cpu    memory          disk
+  #0   running   2014-12-09 10:04:40 AM   0.0%   35.2M of 256M   45.8M of 1G
+		</pre>
+	</li>
+	<li>
+		<h3>Test a Deployed App</h3>
 
-    requested state: started
-    instances: 1/1
-    usage: 256M x 1 instances
-    urls: pongmatch-ex12.cfapps.io
+		You’ve deployed an app to <%=vars.product_short%>!
 
-         state     since                    cpu    memory          disk
-    #0   running   2014-12-09 10:04:40 AM   0.0%   35.2M of 256M   45.8M of 1G
+		Use the <code>cf</code> <%=vars.dev_console_2%> to review information and administer your
+		app and your <%=vars.product_short%> account.
+		For example, you could edit the <code>manifest.yml</code> to increase the number of app
+		instances from 1 to 3, and redeploy the app with a new app name and host name.
 
-</pre>
-
-### Step 5: Test a Deployed App ###
-
-You’ve deployed an app to <%=vars.product_short%>!
-
-Use the `cf` <%=vars.dev_console_2%> to review information and administer your
-app and your <%=vars.product_short%> account.
-For example, you could edit the `manifest.yml` to increase the number of app
-instances from 1 to 3, and redeploy the app with a new app name and host name.
-
-See the [Manage Your Application with the cf CLI](#cli-manage) section for more information. <%=vars.dev_console_4%>
+		See the <a href="#cli-manage">Manage Your Application with the cf CLI</a> section for more information. <%=vars.dev_console_4%>
+	</li>
+</ol>
 
 ## <a id='cli-manage'></a>Manage Your Application with the cf CLI ##
 
