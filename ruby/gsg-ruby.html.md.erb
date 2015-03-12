@@ -30,7 +30,7 @@ workstation
 
 <ol class="list-steps">
 	<li>
-		<h3>Create and Bind a Service Instance for a Ruby Application</h3>
+		<h3 class="steps-header">Create and Bind a Service Instance for a Ruby Application</h3>
 
 		This section describes using the CLI to configure a Redis Cloud managed service
 		instance for an app. <%=vars.dev_console_1%>
@@ -111,11 +111,11 @@ OK
 		<%= yield_for_code_snippet from: 'cloudfoundry-samples/pong_matcher_ruby', at: 'ruby-2b' %>
 	</li>
 	<li>
-		<h3><a id="deployment-options"></a>Configure Deployment Options</h3>
+		<h3 class="steps-header"><a id="deployment-options"></a>Configure Deployment Options</h3>
 
 		<h4>Configure the Deployment Manifest</h4>
 
-		You can specify app deployment options in a manifest that the `cf push` command uses. For more information about application manifests and supported attributes, refer to the <a href="./../../devguide/deploy-apps/manifest.html">Deploying with Application Manifests</a> topic.
+		You can specify app deployment options in a manifest that the <code>cf push</code> command uses. For more information about application manifests and supported attributes, refer to the <a href="./../../devguide/deploy-apps/manifest.html">Deploying with Application Manifests</a> topic.
 
 		<h4>Configure a Production Server</h4>
 
@@ -124,7 +124,7 @@ OK
 		<p class="tip"><strong>Sample App Step</strong><br />You can skip this step. The <code>manifest.yml</code> file for <code>pong_matcher_ruby</code> does not require any additional configuration to deploy the app.</p>
 	</li>
 	<li>
-		<h3>Log in and Target the API Endpoint</h3>
+		<h3 class="steps-header">Log in and Target the API Endpoint</h3>
 
 		Run <code>cf login -a API_ENDPOINT</code>, enter your login credentials, and select a space
 		and org.
@@ -136,7 +136,7 @@ OK
 		  <p class="tip"><strong>Sample App Step</strong><br />You must do this step to run the sample app.</p>
 	</li>
 	<li>
-		<h3>Deploy an App</h3>
+		<h3 class="steps-header">Deploy an App</h3>
 
 		<p class="note"><strong>Note</strong>: You must use the cf CLI to deploy apps.</p>
 
@@ -210,7 +210,7 @@ OK
 		</pre>
 	</li>
 	<li>
-		<h3>Test a Deployed App</h3>
+		<h3 class="steps-header">Test a Deployed App</h3>
 
 		You’ve deployed an app to <%=vars.product_short%>!
 
